@@ -1,23 +1,179 @@
-<a href="{% url 'home' %}">← Back to Home</a>
-<h2>Hospitals</h2>
+<!DOCTYPE html>
+<html>
+<head>
 
-<form method="GET">
-    <input type="text" name="q" placeholder="Search hospitals..." value="{{ query }}">
-    <button type="submit">Search</button>
-</form>
+    <title>Hospitals</title>
 
-<br>
+    {% include "HomePage/navbar_css.html" %}
 
-{% for hospital in hospitals %}
-    <div style="border:1px solid #ccc; padding:10px; margin:10px;">
-        <a href="{% url 'hospital_detail' hospital.hospital_id %}">
+    <style>
+
+    body{
+        background:#F8FAFC;
+    }
+
+    .hospital-container{
+        width:90%;
+        max-width:1200px;
+        margin:50px auto;
+    }
+
+    .back-link{
+        color:#10B981;
+        text-decoration:none;
+        font-weight:600;
+    }
+
+    .back-link:hover{
+        color:#059669;
+    }
+
+    h1{
+        margin-top:20px;
+        font-size:46px; 
+        color:#161515;
+    }
+
+    .subtitle{
+        color:#282a2c;
+        margin:15px 0 35px;
+        font-size:18px;
+    }
+
+    .search-box{
+        display:flex;
+        gap:15px;
+        margin-bottom:40px;
+        flex-wrap:wrap;
+    }
+
+    .search-box input{
+        flex:1;
+        min-width:280px;
+        padding:14px;
+        border:1px solid #D1D5DB;
+        border-radius:10px;
+        font-size:16px;
+    }
+
+    .search-box button{
+        background:#176235;
+        color:white;
+        border:none;
+        padding:14px 28px;
+        border-radius:10px;
+        cursor:pointer;
+        transition:.3s;
+    }
+
+    .search-box button:hover{
+        background:#059669;
+    }
+
+    .hospital-grid{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+        gap:25px;
+    }
+
+    .hospital-card{
+        background: #F0FDF4;
+        border-radius:15px;
+        padding:28px;
+        border:1px solid #E5E7EB;
+        transition:.3s;
+    }
+
+    .hospital-card:hover{
+        transform:translateY(-6px);
+        box-shadow:0 15px 35px rgba(0,0,0,.08);
+    }
+
+    .hospital-card h3{
+        color:#020202;
+        margin-bottom:15px;
+    }
+
+    .address{
+        color:#191a1b;
+        margin-bottom:25px;
+        line-height:1.6;
+    }
+
+    .btn{
+        display:inline-block;
+        background:#118a62;
+        color:white;
+        text-decoration:none;
+        padding:12px 22px;
+        border-radius:8px;
+        transition:.3s;
+    }
+
+    .btn:hover{
+        background:#059669;
+    }
+
+    </style>
+
+</head>
+
+<body>
+
+{% include "HomePage/navbar.html" %}
+{% include "patients/auth_modal.html" %}
+
+<div class="hospital-container">
+
+    <h1>Hospitals</h1>
+
+    <p class="subtitle">
+        Browse hospitals and explore their available doctors.
+    </p>
+
+    <form method="GET" class="search-box">
+
+        <input
+            type="text"
+            name="q"
+            placeholder="Search hospitals..."
+            value="{{ query }}"
+        >
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+    <div class="hospital-grid">
+
+        {% for hospital in hospitals %}
+
+        <div class="hospital-card">
+
             <h3>{{ hospital.name }}</h3>
-        </a>
 
-        <p>{{ hospital.address }}</p>
+            <p class="address">
+                {{ hospital.address }}
+            </p>
 
-        <a href="{% url 'hospital_detail' hospital.hospital_id %}">
-            View Doctors →
-        </a>
+            <a href="{% url 'hospital_detail' hospital.hospital_id %}" class="btn">
+                View Doctors →
+            </a>
+
+        </div>
+
+        {% empty %}
+
+        <p>No hospitals found.</p>
+
+        {% endfor %}
+
     </div>
-{% endfor %}
+
+</div>
+{% include "HomePage/scripts.html" %}
+{% include "HomePage/footer.html" %}
+</body>
+</html>

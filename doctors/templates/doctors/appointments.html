@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Doctor Appointments</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#f4f6f8;
+            padding:30px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            background:white;
+        }
+
+        th,
+        td{
+            padding:14px;
+            border-bottom:1px solid #ddd;
+            text-align:left;
+        }
+
+        th{
+            background:#2c3e50;
+            color:white;
+        }
+
+        .status{
+            font-weight:bold;
+        }
+
+        .paid{
+            color:green;
+            font-weight:bold;
+        }
+
+        .pending{
+            color:#d35400;
+            font-weight:bold;
+        }
+
+        /* High no-show risk */
+        .no-show-warning{
+            color:#c0392b;
+            font-weight:bold;
+        }
+
+        /* Positive / confirmed result */
+        .attendance-confirmed{
+            color:#27ae60;
+            font-weight:bold;
+        }
+
+        /* Patient actually did not attend */
+        .attendance-missed{
+            color:#c0392b;
+            font-weight:bold;
+        }
+
+        .btn{
+            display:inline-block;
+            padding:8px 12px;
+            text-decoration:none;
+            border-radius:5px;
+            color:white;
+            background:#27ae60;
+        }
+
+        .btn:hover{
+            background:#219150;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<h2>My Appointments</h2>
+
+
+<table>
+
+
+<tr>
+
+    <th>Patient</th>
+
+    <th>Date</th>
+
+    <th>Time</th>
+
+    <th>Appointment Status</th>
+
+    <th>Payment Method</th>
+
+    <th>Payment Status</th>
+
+    <th>Appointment Acknowledgement</th>
+
+    {% if request.GET.status != "upcoming" %}
+        <th>Action</th>
+    {% endif %}
+
+</tr>
+
+
+{% for appointment in appointments %}
+
+
+<tr>
+
+
+    <!-- Patient -->
+
+    <td>
+
+        {{ appointment.patient.username }}
+
+    </td>
+
+
+    <!-- Date -->
+
+    <td>
+
+        {{ appointment.appointment_date }}
+
+    </td>
+
+
+    <!-- Time -->
+
+    <td>
+
+        {{ appointment.appointment_time }}
+
+    </td>
+
+
+    <!-- Appointment Status -->
+
+    <td class="status">
+
+        {{ appointment.status|title }}
+
+    </td>
+
+
+    <!-- Payment Method -->
+
+    <td>
+
+        {% if appointment.transaction %}
+
+            {{ appointment.transaction.get_payment_method_display }}
+
+        {% else %}
+
+            -
+
+        {% endif %}
+
+    </td>
+
+
+    <!-- Payment Status -->
+
+    <td>
+
+        {% if appointment.transaction %}
+
+            {% if appointment.transaction.payment_status == "completed" %}
+
+                <span class="paid">
+
+                    Completed
+
+                </span>
+
+            {% else %}
+
+                <span class="pending">
+
+                    {{ appointment.transaction.get_payment_status_display }}
+
+                </span>
+
+            {% endif %}
+
+        {% else %}
+
+            -
+
+        {% endif %}
+
+    </td>
+
+
+    <!-- Appointment Acknowledgement / No-show Result -->
+
+    <td>
+
+        {% if appointment.status == "completed" %}
+
+            <span class="attendance-confirmed">
+
+                 Patient Attended
+
+            </span>
+
+        {% elif appointment.status == "missed" %}
+
+            <span class="attendance-missed">
+
+                 Patient Did Not Attend
+
+            </span>
+
+        {% elif appointment.attendance_confirmed_display %}
+
+            <span class="attendance-confirmed">
+
+                 Appointment Acknowledged
+
+            </span>
+
+        {% elif appointment.no_show_warning %}
+
+            <span class="no-show-warning">
+
+                 May Not Show
+
+            </span>
+
+        {% else %}
+
+            -
+
+        {% endif %}
+
+    </td>
+
+
+    <!-- Action -->
+
+    {% if request.GET.status != "upcoming" %}
+
+    <td>
+
+
+        {% if appointment.status == "completed" %}
+
+
+            {% if appointment.medicalreport %}
+
+                <a href="{% url 'view_report' appointment.appointment_id %}">
+
+                    View Report
+
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'upload_report' appointment.appointment_id %}">
+
+                    Upload Report
+
+                </a>
+
+            {% endif %}
+
+
+        {% elif appointment.status == "missed" %}
+
+            Missed
+
+
+        {% elif appointment.status == "cancelled" %}
+
+            Cancelled
+
+
+        {% endif %}
+
+
+    </td>
+
+    {% endif %}
+
+
+</tr>
+
+
+{% empty %}
+
+
+<tr>
+
+    <td colspan="8">
+
+        No appointments found.
+
+    </td>
+
+</tr>
+
+
+{% endfor %}
+
+
+</table>
+
+
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% include "HomePage/navbar_css.html" %}
+</head>
+
+<body>
+
+    {% include "HomePage/navbar.html" %}
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% include "HomePage/hero.html" %}
+    {% include "HomePage/about.html" %}
+    {% include "HomePage/how.html" %}
+    {% include "HomePage/services.html" %}
+    {% include "HomePage/footer.html" %}
+    {% include "patients/auth_modal.html" %}
+    {% include "HomePage/scripts.html" %}
+
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+# Virtual environment
+venv/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Django database
+*.sqlite3
+
+# User-uploaded media
+media/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secret encryption key
+security/key.py
+
+# Test medical report
+selenium_tests/sample_report.pdf

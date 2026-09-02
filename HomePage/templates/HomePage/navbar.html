@@ -1,0 +1,54 @@
+<nav>
+
+    <div class="container navbar">
+
+        <h2 class="logo">
+            <a href="{% url 'home' %}">DocAp</a>
+        </h2>
+
+        <ul>
+
+            <li><a href="{% url 'home' %}">Home</a></li>
+
+            <li><a href="{% url 'doctor_list' %}">Doctors</a></li>
+
+            <li><a href="{% url 'hospital_list' %}">Hospitals</a></li>
+
+            <li><a href="{% url 'home' %}#about">About</a></li>
+
+            <li><a href="{% url 'home' %}#how">How It Works</a></li>
+
+            <li><a href="{% url 'home' %}#services">Services</a></li>
+
+
+        </ul>
+
+        <div>
+
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'patient_dashboard' %}" class="login-btn">
+                    Dashboard
+                </a>
+
+                <a href="{% url 'logout' %}" class="register-btn">
+                    Logout
+                </a>
+
+            {% else %}
+
+                <a href="#"  class="login-btn open-login">
+                    Login
+                </a>
+
+                <a href="#" class="register-btn open-register">
+                    Register
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</nav>

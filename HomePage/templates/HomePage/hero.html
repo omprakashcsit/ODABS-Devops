@@ -1,0 +1,51 @@
+{% load static %}
+<section
+    class="hero"
+    style="background-image: url('{% static 'HomePage/images/imagee.jpg' %}');">
+
+    <div class="overlay">
+
+        <div class="container hero-content">
+
+            <div class="hero-text">
+
+                <h1>
+                    Book Your Doctor Appointment
+                    <span>Online</span>
+                </h1>
+
+                <p>
+                    DocAp helps patients find trusted doctors,
+                    compare hospitals, and book appointments
+                    quickly and securely.
+                </p>
+
+                <div class="hero-buttons">
+
+                    {% if request.user.is_authenticated %}
+
+                    <a href="{% url 'doctor_list' %}" class="primary-btn">
+                        Find Doctors
+                    </a>
+
+                    {% else %}
+
+                    <a href="#" class="primary-btn open-register">
+                        Get Started
+                    </a>
+
+                    <a href="#" class="secondary-btn open-login">
+                        Login
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

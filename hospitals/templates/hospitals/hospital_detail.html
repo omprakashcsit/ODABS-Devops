@@ -1,53 +1,209 @@
-<a href="{% url 'hospital_list' %}">← Back to Hospitals</a>
+<!DOCTYPE html>
+<html>
+<head>
 
-<h2>{{ hospital.name }}</h2>
-<p>{{ hospital.address }}</p>
+    <title>Hospitals</title>
+    {% include "HomePage/navbar_css.html" %}
 
-<hr>
+<style>
+    body{
+    background:#F8FAFC;
+    font-family:'Poppins',sans-serif;
+}
 
-<!-- 🔍 SEARCH + FILTER (COMBINED FORM) -->
-<form method="GET">
+.back-link{
+    color:#176235;
+    text-decoration:none;
+    font-weight:600;
+}
 
-    <!-- SEARCH -->
-    <input type="text" name="search"
-           placeholder="Search doctor name or specialization"
-           value="{{ search }}">
+.back-link:hover{
+    color:#090909;
+}
 
-    <button type="submit">Search</button>
+h1{
+    margin-top:20px;
+    font-size:42px;
+    color:#070707;
+}
 
-    <br><br>
+.subtitle{
+    color:#111212;
+    margin-bottom:35px;
+    font-size:18px;
+}
 
-    <!-- FILTER -->
-    <select name="department">
-        <option value="">All Departments</option>
+.section-title{
+    margin:45px 0 25px;
+    color:#1d1e1e;
+}
 
-        {% for dept in departments %}
-            <option value="{{ dept.id }}"
-                {% if dept.id|stringformat:"s" == dept_id %}selected{% endif %}>
+.search-box{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:35px;
+}
+
+.search-box input,
+.search-box select{
+    padding:14px;
+    border:1px solid #D1D5DB;
+    border-radius:10px;
+    font-size:15px;
+}
+
+.search-box input{
+    flex:1;
+    min-width:260px;
+}
+
+.search-box button{
+    background:#10B981;
+    color:white;
+    border:none;
+    padding:14px 28px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.search-box button:hover{
+    background:#059669;
+}
+
+.doctor-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:25px;
+}
+
+.doctor-card{
+    background:#F0FDF4;
+    border:1px solid #E5E7EB;
+    border-radius:15px;
+    padding:28px;
+    transition:.3s;
+}
+
+.doctor-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+}
+
+.doctor-card h3{
+    color:#171717;
+    margin-bottom:18px;
+}
+
+.doctor-card p{
+    color:#2d2f31;
+    line-height:1.7;
+    margin-bottom:15px;
+}
+
+.btn{
+    display:inline-block;
+    background:#10B981;
+    color:white;
+    padding:12px 22px;
+    border-radius:8px;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.btn:hover{
+    background:#059669;
+}
+</style>
+
+<body>
+{% include "HomePage/navbar.html" %}
+{% include "patients/auth_modal.html" %}
+
+<div class="container">
+
+    <a href="{% url 'hospital_list' %}" class="back-link">
+        ← Back to Hospitals
+    </a>
+
+    <h1>{{ hospital.name }}</h1>
+
+    <p class="subtitle">
+        {{ hospital.address }}
+    </p>
+
+    <form method="GET" class="search-box">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search doctor name or specialization"
+            value="{{ search }}"
+        >
+
+        <select name="department">
+
+            <option value="">All Departments</option>
+
+            {% for dept in departments %}
+
+            <option
+                value="{{ dept.id }}"
+                {% if dept.id|stringformat:"s" == dept_id %}selected{% endif %}
+            >
                 {{ dept.name }}
             </option>
+
+            {% endfor %}
+
+        </select>
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+    <h2 class="section-title">
+        Doctors in {{ hospital.name }}
+    </h2>
+
+    <div class="doctor-grid">
+
+        {% for doctor in doctors %}
+
+        <div class="doctor-card">
+
+            <h3>{{ doctor.name }}</h3>
+
+            <p>
+                <strong>Specialization:</strong><br>
+                {{ doctor.specialization }}
+            </p>
+
+            <p>
+                <strong>Department:</strong><br>
+                {{ doctor.department.name }}
+            </p>
+
+            <a href="{% url 'doctor_detail' doctor.doctor_id %}" class="btn">
+                View Profile
+            </a>
+
+        </div>
+
+        {% empty %}
+
+        <p>No doctors found in this hospital.</p>
+
         {% endfor %}
-    </select>
-
-    <button type="submit">Filter</button>
-
-</form>
-
-<hr>
-
-<h3>Doctors in {{ hospital.name }}</h3>
-
-{% for doctor in doctors %}
-    <div style="border:1px solid #ddd; padding:10px; margin:10px;">
-
-        <a href="{% url 'doctor_detail' doctor.doctor_id %}">
-            <b>{{ doctor.name }}</b>
-        </a><br>
-
-        {{ doctor.specialization }}<br>
-        Department: {{ doctor.department.name }}
 
     </div>
-{% empty %}
-    <p>No doctors found in this hospital</p>
-{% endfor %}
+
+</div>
+{% include "HomePage/scripts.html" %}
+{% include "HomePage/footer.html" %}
+</body>
+
+</html>

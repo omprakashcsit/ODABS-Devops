@@ -1,98 +1,375 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Appointments</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments</title>
+
+    {% include "HomePage/navbar_css.html" %}
+
+    <style>
+        body {
+            background: #F8FAFC;
+        }
+
+        .appointments-container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 60px auto;
+            padding: 0 30px;
+            box-sizing: border-box;
+        }
+
+        .page-title {
+            font-size: 42px;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #64748B;
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin: 35px 0 20px;
+            color: #0F172A;
+        }
+
+        .appointments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 25px;
+        }
+
+        .appointment-card {
+            background: #fff;
+            border-radius: 18px;
+            border: 1px solid #E5E7EB;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .05);
+            transition: .25s;
+        }
+
+        .appointment-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .doctor-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 18px;
+        }
+
+        .info {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #334155;
+        }
+
+        .info b {
+            color: #0F172A;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 13px;
+            margin-top: 8px;
+            margin-right: 8px;
+        }
+
+        .upcoming {
+            background: #10B981;
+        }
+
+        .completed {
+            background: #2563EB;
+        }
+
+        .missed {
+            background: #DC2626;
+        }
+
+        .cancelled {
+            background: #64748B;
+        }
+
+        .pending {
+            background: #F59E0B;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            transition: .25s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: .92;
+        }
+
+        .pay {
+            background: #635BFF;
+        }
+
+        .cancel {
+            background: #EF4444;
+        }
+
+        .reschedule {
+            background: #0F766E;
+        }
+
+        .empty {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            color: #64748B;
+            border: 1px solid #E5E7EB;
+        }
+    </style>
+
 </head>
 
 <body>
 
-<h2>Your Appointments</h2>
+    {% include "HomePage/navbar.html" %}
 
-<!-- upcoming -->
-<h3>Upcoming</h3>
+    <div class="appointments-container">
 
-{% for appt in upcoming %}
-    <div style="border:1px solid #ccc; padding:12px; margin-bottom:12px;">
+        <h1 class="page-title">My Appointments</h1>
 
-        <p><b>Doctor:</b> {{ appt.doctor.name }}</p>
-        <p><b>Date:</b> {{ appt.appointment_date }}</p>
-        <p><b>Time:</b> {{ appt.appointment_time }}</p>
-
-        <!-- show status -->
-        <p>
-            <b>Status:</b>
-            {{ appt.status|title }}
+        <p class="page-subtitle">
+            Manage your upcoming and previous appointments.
         </p>
 
-        <!-- cancel option -->
-        {% if appt.status != "cancelled" %}
-            <a href="{% url 'cancel_appointment' appt.appointment_id %}"
-               style="color:red; margin-right:10px;">
-                Cancel Appointment
-            </a>
-        {% endif %}
+        <h2 class="section-title">
+            Upcoming Appointments
+        </h2>
 
-        <!-- reschedule -->
-        <a href="{% url 'doctor_reschedule' appt.appointment_id %}">
-            Reschedule
-        </a>
+        <div class="appointments-grid">
+
+            {% for appt in upcoming %}
+
+            <div class="appointment-card">
+
+                <div class="doctor-name">
+                    {{ appt.doctor.name }}
+                </div>
+
+                <div class="info">
+                    <b>Date:</b>
+                    {{ appt.appointment_date }}
+                </div>
+
+                <div class="info">
+                    <b>Time:</b>
+                    {{ appt.appointment_time }}
+                </div>
+
+                <div class="info">
+                    <b>Status:</b>
+
+                    <span class="badge upcoming">
+                        {{ appt.status|title }}
+                    </span>
+
+                </div>
+
+                {% if appt.transaction %}
+
+                <div class="info">
+                    <b>Payment Method:</b>
+                    {{ appt.transaction.get_payment_method_display }}
+                </div>
+
+                <div class="info">
+                    <b>Payment Status:</b>
+
+                    {% if appt.transaction.payment_status == "completed" %}
+
+                    <span class="badge completed">
+                        Completed
+                    </span>
+
+                    {% else %}
+
+                    <span class="badge pending">
+                        Pending
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+                {% endif %}
+
+                <div class="actions">
+
+                    {% if appt.transaction and appt.transaction.payment_method == "stripe" and
+                    appt.transaction.payment_status != "completed" %}
+
+                    <a href="{% url 'stripe_payment' appt.appointment_id %}" class="btn pay">
+
+                        Pay Now
+
+                    </a>
+
+                    {% endif %}
+
+                    {% if appt.status != "cancelled" %}
+
+                    <a href="{% url 'cancel_appointment' appt.appointment_id %}" class="btn cancel">
+
+                        Cancel
+
+                    </a>
+
+                    {% endif %}
+
+                    <a href="{% url 'doctor_reschedule' appt.appointment_id %}" class="btn reschedule">
+
+                        Reschedule
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="empty">
+
+                No upcoming appointments.
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <h2 class="section-title">
+            Past Appointments
+        </h2>
+
+        <div class="appointments-grid">
+
+            {% for appt in past %}
+
+            <div class="appointment-card">
+
+                <div class="doctor-name">
+                    {{ appt.doctor.name }}
+                </div>
+
+                <div class="info">
+                    <b>Date:</b>
+                    {{ appt.appointment_date }}
+                </div>
+
+                <div class="info">
+                    <b>Time:</b>
+                    {{ appt.appointment_time }}
+                </div>
+
+                <div class="info">
+                    <b>Status:</b>
+
+                    {% if appt.status == "completed" %}
+
+                    <span class="badge completed">
+                        Completed
+                    </span>
+
+                    {% elif appt.status == "missed" %}
+
+                    <span class="badge missed">
+                        Missed
+                    </span>
+
+                    {% elif appt.status == "cancelled" %}
+
+                    <span class="badge cancelled">
+                        Cancelled
+                    </span>
+
+                    {% else %}
+
+                    <span class="badge upcoming">
+                        {{ appt.status|title }}
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+                {% if appt.transaction %}
+
+                <div class="info">
+                    <b>Payment Method:</b>
+                    {{ appt.transaction.get_payment_method_display }}
+                </div>
+
+                <div class="info">
+                    <b>Payment Status:</b>
+
+                    {% if appt.transaction.payment_status == "completed" %}
+
+                    <span class="badge completed">
+                        Completed
+                    </span>
+
+                    {% else %}
+
+                    <span class="badge pending">
+                        Pending
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            {% empty %}
+
+            <div class="empty">
+
+                No past appointments.
+
+            </div>
+
+            {% endfor %}
+
+        </div>
 
     </div>
 
-{% empty %}
-    <p>No upcoming appointments.</p>
-{% endfor %}
-
-
-<!-- past -->
-<h3>Past Appointments</h3>
-
-{% for appt in past %}
-    <div style="border:1px solid #aaa; padding:12px; margin-bottom:12px;">
-
-        <p><b>Doctor:</b> {{ appt.doctor.name }}</p>
-        <p><b>Date:</b> {{ appt.appointment_date }}</p>
-        <p><b>Time:</b> {{ appt.appointment_time }}</p>
-
-        <!-- always show status -->
-        <p>
-            <b>Status:</b>
-            {{ appt.status|title }}
-        </p>
-
-        {% if appt.status == "completed" %}
-
-            <p style="color:green;">✔ Completed</p>
-
-        {% elif appt.status == "cancelled" %}
-
-            <p style="color:red;">✖ Cancelled</p>
-
-        {% elif appt.status == "missed" %}
-
-            <p style="color:orange;">⚠ Missed</p>
-
-        {% else %}
-
-            <!-- mark completed -->
-            <a href="{% url 'doctor_mark_completed' appt.appointment_id %}"
-               style="color:green;">
-                Mark as Completed
-            </a>
-
-            <!-- reschedule -->
-            <a href="{% url 'doctor_reschedule' appt.appointment_id %}"
-               style="color:orange; margin-left:10px;">
-                Reschedule
-            </a>
-
-        {% endif %}
-
-    </div>
-
-{% empty %}
-    <p>No past appointments.</p>
-{% endfor %}
+    {% include "HomePage/footer.html" %}
+    {% include "HomePage/scripts.html" %}
 
 </body>
+
 </html>
