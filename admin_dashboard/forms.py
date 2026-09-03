@@ -135,7 +135,7 @@ from patients.security import (
     encrypt_patient_data,
 )
 
-from security.key import ENCRYPTION_KEY
+from security.config import ENCRYPTION_KEY
 
 
 class PatientForm(forms.ModelForm):

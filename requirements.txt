@@ -1,0 +1,5 @@
+Django==6.0.3
+stripe
+pillow
+cryptography
+numpy

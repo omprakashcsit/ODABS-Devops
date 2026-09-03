@@ -17,7 +17,7 @@ from notifications.services import create_notification
 from .forms import DoctorForm, HospitalForm
 from django.db.models.functions import TruncMonth, ExtractYear
 from patients.security import decrypt_patient_data
-from security.key import ENCRYPTION_KEY
+from security.config import ENCRYPTION_KEY
 
 # admin dashboard home view
 @login_required

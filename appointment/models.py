@@ -3,7 +3,13 @@ from django.contrib.auth.models import User
 from doctors.models import Doctor
 
 from security.encryption import encrypt, decrypt
-from security.key import ENCRYPTION_KEY
+import os
+
+ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY")
+
+if not ENCRYPTION_KEY:
+    raise ValueError("ENCRYPTION_KEY environment variable is not set")
+
 
 
 class Appointment(models.Model):

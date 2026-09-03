@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 
 from security.encryption import decrypt
-from security.key import ENCRYPTION_KEY
+from security.config import ENCRYPTION_KEY
 from .models import MedicalReport
 
 
@@ -29,7 +29,7 @@ from django.shortcuts import get_object_or_404
 
 from .models import MedicalReport
 from security.encryption import decrypt
-from security.key import ENCRYPTION_KEY
+from security.config import ENCRYPTION_KEY
 from django.http import FileResponse
 
 from django.http import HttpResponse
@@ -38,7 +38,7 @@ from django.shortcuts import get_object_or_404
 
 from .models import MedicalReport
 from security.encryption import decrypt
-from security.key import ENCRYPTION_KEY
+from security.config import ENCRYPTION_KEY
 
 from appointment.ml.predictor import (
     predict_no_show,

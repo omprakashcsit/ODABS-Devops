@@ -18,7 +18,7 @@ from notifications.services import create_notification, send_notification_email
 
 from .models import Patients
 
-from security.key import ENCRYPTION_KEY
+from security.config import ENCRYPTION_KEY
 
 from .security import (
     encrypt_patient_data,

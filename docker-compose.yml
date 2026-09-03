@@ -1,0 +1,31 @@
+services:
+  odabs:
+    build: .
+    container_name: odabs-container
+    ports:
+      - "8000:8000"
+    environment:
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    container_name: odabs-db
+    environment:
+      POSTGRES_DB: odabs
+      POSTGRES_USER: odabs
+      POSTGRES_PASSWORD: odabs_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odabs -d odabs"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
