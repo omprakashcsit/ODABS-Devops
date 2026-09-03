@@ -72,7 +72,7 @@ DATABASES = {
         'NAME': 'odabs',
         'USER': 'odabs',
         'PASSWORD': 'odabs_password',
-        'HOST': 'db',
+        'HOST': os.getenv('DATABASE_HOST',  'db'),
         'PORT': '5432',
     }
 }

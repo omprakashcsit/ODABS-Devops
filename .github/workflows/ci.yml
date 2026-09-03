@@ -12,6 +12,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     services:
       db:
         image: postgres:16
@@ -23,7 +24,7 @@ jobs:
           --health-cmd="pg_isready -U odabs -d odabs"
           --health-interval=5s
           --health-timeout=5s
-          --health-retries=5      
+          --health-retries=5
 
     steps:
       - name: Checkout code
@@ -48,12 +49,14 @@ jobs:
       - name: Run Django checks
         env:
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          DATABASE_HOST: localhost
         run: |
           python manage.py check
 
       - name: Run tests
         env:
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          DATABASE_HOST: localhost
         run: |
           python manage.py test
 
