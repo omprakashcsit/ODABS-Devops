@@ -55,6 +55,13 @@ jobs:
         run: |
           python manage.py check
 
+      - name: Run migrations
+        env:
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          DATABASE_HOST: localhost
+        run: |
+          python manage.py migrate --noinput
+
       - name: Run tests
         env:
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
