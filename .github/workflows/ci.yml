@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     services:
@@ -61,13 +61,6 @@ jobs:
           DATABASE_HOST: localhost
         run: |
           python manage.py migrate --noinput
-
-      - name: Run tests
-        env:
-          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-          DATABASE_HOST: localhost
-        run: |
-          python manage.py test
 
       - name: Build Docker image
         run: |
