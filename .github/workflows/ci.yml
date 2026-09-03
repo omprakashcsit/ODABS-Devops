@@ -20,6 +20,9 @@ jobs:
           POSTGRES_DB: odabs
           POSTGRES_USER: odabs
           POSTGRES_PASSWORD: odabs_password
+        ports:
+      - 5432:5432
+  
         options: >-
           --health-cmd="pg_isready -U odabs -d odabs"
           --health-interval=5s
