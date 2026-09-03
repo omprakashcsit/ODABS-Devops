@@ -64,4 +64,5 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t odabs:ci
+          docker build -t odabs:ci .
+
