@@ -8,7 +8,11 @@ SECRET_KEY = 'django-insecure-v22w)sq(t)mx-qnk0qb(rl00ie8*sqja4**3-%*d(lnkltr=10
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "192.168.49.2",
+]
 
 MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
