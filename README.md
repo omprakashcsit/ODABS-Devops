@@ -1,3 +1,4 @@
+
 # Online Doctor Appointment Booking System (ODABS)
 
 ODABS (Online Doctor Appointment Booking System) is a web-based application for booking and managing doctor appointments.
@@ -28,6 +29,8 @@ The application is built with Django and PostgreSQL. The project also applies De
 - Kubernetes
 - Minikube
 - NGINX Ingress
+- Prometheus
+- Grafana
 
 ---
 
