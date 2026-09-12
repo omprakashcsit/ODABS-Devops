@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: odabs-config
+data:
+  DATABASE_NAME: odabs
+  DATABASE_USER: odabs
+  DATABASE_HOST: db
+  DATABASE_PORT: "5432"

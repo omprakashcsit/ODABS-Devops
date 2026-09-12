@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odabs-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: odabs-deployment
+  template:
+    metadata:
+      labels:
+        app: odabs-deployment
+    spec:
+      imagePullSecrets:
+        - name: dockerhub-secret
+      containers:
+        - name: odabs
+          image: omprakashcsit/odabs:v3
+          ports:
+            - containerPort: 8000
+
+          envFrom:
+            - configMapRef:
+                name: odabs-config
+            - secretRef:
+                name: odabs-secret
+
+          readinessProbe:
+            httpGet:
+              path: /health/
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /health/
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
