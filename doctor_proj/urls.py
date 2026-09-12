@@ -1,3 +1,4 @@
+from .views import health_check
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -70,6 +71,7 @@ path('', Home, name='home'),
         include('appointment.urls')
     ),
     path("payments/", include("payments.urls")),
+    path("health/",health_check),
     
 
     

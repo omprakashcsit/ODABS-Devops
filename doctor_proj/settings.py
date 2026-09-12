@@ -74,11 +74,12 @@ WSGI_APPLICATION = 'doctor_proj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'odabs',
-        'USER': 'odabs',
-        'PASSWORD': 'odabs_password',
+        'NAME': os.getenv('DATABASE_NAME', 'odabs'),
+        'USER': os.getenv('DATABASE_USER', 'odabs'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'odabs_password'),
         'HOST': os.getenv('DATABASE_HOST',  'db'),
-        'PORT': '5432',
+        'PORT': os.getenv('DATABASE_PORT', '5432'),
+
     }
 }
 

@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from doctors.models import Doctor
 
@@ -21,3 +22,6 @@ def role_based_redirect(request):
 
     # normal users (patients)
     return redirect('patient_dashboard')
+
+def health_check(request):
+    return HttpResponse("OK")
