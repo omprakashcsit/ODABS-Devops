@@ -29,3 +29,8 @@ security/key.py
 
 # Test medical report
 selenium_tests/sample_report.pdf
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
